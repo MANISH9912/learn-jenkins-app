@@ -37,9 +37,11 @@ pipeline {
         stage('E2E') {
             agent {
                 docker {
-                    ls -la
-                    rm package-lock.json
-                    ls -la
+                    sh '''
+                        ls -la
+                        rm package-lock.json
+                        ls -la
+                    '''
                     image 'mcr.microsoft.com/playwright:v1.49.1-noble'
                     ls -la
                     reuseNode true
