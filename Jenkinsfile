@@ -17,29 +17,27 @@ pipeline {
                     npm ci
                     npm run build
                     ls -la
-                    rm package-lock.json
-                    ls -la
                 '''
             }
         }
-        // stage('Test') {
-        //     agent {
-        //         docker {
-        //             image 'node:18-alpine'
-        //             reuseNode true
-        //         }
-        //     }
-        //     steps {
-        //         sh '''
-        //             npm test
-        //         '''
-        //     }
-        // }
+        stage('Test') {
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh '''
+                    npm test
+                '''
+            }
+        }
 
         stage('E2E') {
             agent {
                 docker {
-                    image 'mcr.microsoft.com/playwright:v1.49.1-noble'
+                    image 'mcr.microsoft.com/playwright:v1.39.1-jammy'
                     reuseNode true
                 }
             }
