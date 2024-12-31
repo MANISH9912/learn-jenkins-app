@@ -46,27 +46,27 @@ pipeline {
                     }
                 }
 
-                // stage('E2E') {
-                //     agent {
-                //         docker {
-                //             image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
-                //             reuseNode true
-                //         }
-                //     }
-                //     steps {
-                //         sh '''
-                //             npm install serve
-                //             node_modules/.bin/serve -s build &
-                //             sleep 10
-                //             npx playwright test --reporter=html
-                //         '''
-                //     }
-                //     post {
-                //         always {
-                //             publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright Local HTML Report', reportTitles: '', useWrapperFileDirectly: true])
-                //         }
-                //     }
-                // }
+                stage('E2E') {
+                    agent {
+                        docker {
+                            image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                            reuseNode true
+                        }
+                    }
+                    steps {
+                        sh '''
+                            npm install serve
+                            node_modules/.bin/serve -s build &
+                            sleep 10
+                            npx playwright test --reporter=html
+                        '''
+                    }
+                    post {
+                        always {
+                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright Local HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                        }
+                    }
+                }
             }
         }
         stage('Deploy Staging') {
@@ -88,7 +88,10 @@ pipeline {
         }
         stage('Approval') {
             steps {
-                input message: 'Do you wish to deploy to production?', ok: 'Yes, I am sure!'
+                timeout(15) {
+                    echo "Timeout block"
+                    input message: 'Do you wish to deploy to production?', ok: 'Yes, I am sure!'
+                }
             }
         }
         stage('Deploy Prod') {
