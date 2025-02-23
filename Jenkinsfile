@@ -1,6 +1,7 @@
 pipeline {
     agent any
     environment {
+        APP_NAME = "learn-jenkins-app"
         NETLIFY_SITE_ID = "3e9edbfd-c956-4492-86da-65d8a73c1b3f"
         NETLIFY_AUTH_TOKEN = credentials("netlify-token")
         REACT_APP_VERSION = "1.0.$BUILD_ID"
@@ -40,7 +41,7 @@ pipeline {
             }
             steps {
                 sh '''
-                    docker build -t my-jenkins-app .
+                    docker build -t $APP_NAME:$REACT_APP_VERSION .
                 '''
             }
         }
